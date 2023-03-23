@@ -10,13 +10,13 @@ preserveAspectRatio="xMidYMid">
 
 <!-- Elementy wielokrotnego użytku -->
 <defs>
-    <g id ="polygon" fill="white"stroke-width="0.02" stroke="black">
+    <g id ="dodecagon" fill="white"stroke-width="0.02" stroke="black">
         
         <!-- rotate -->
         <animateTransform attributeName="transform" type="rotate" from="0 1 1" 
                           to="720 1 1" dur="15s" repeatCount="indefinite" />
-        
-        <polygon points="2,1,
+        //dwunastokąt
+        <dodecagon points="2,1,
                           1.91,0.59,
                           1.59,0.18,
                           1.09,0.05,
@@ -58,11 +58,11 @@ preserveAspectRatio="xMidYMid">
         
        
     </g>
-
+    //trójkąt
     <g id ="triangle">
         <polygon points="0.8,3.8 1.4,0.6 2.2,3.8"/>
     </g>
-
+    //ramiona
     <g id="line" stroke-width="0.3" stroke="red" >
         <line x1="1" y1="0.78"  x2="5.4" y2="2.18" />
     </g>
@@ -70,18 +70,18 @@ preserveAspectRatio="xMidYMid">
     
     <!-- Dodanie kopi obiektu -->
 
-    <use xlink:href="#polygon" transform="scale(0.35,0.35) translate(3.1,3.70)" />
-    <use xlink:href="#polygon" transform="scale(0.35,0.35) translate(7.3,5.05)" />
+    <use xlink:href="#dodecagon" transform="scale(0.35,0.35) translate(3.1,3.70)" />
+    <use xlink:href="#dodecagon" transform="scale(0.35,0.35) translate(7.3,5.05)" />
     <use xlink:href="#line" transform="scale(0.35,0.35) translate(3,3.9)" />
     <use xlink:href="#triangle" fill="blue" transform="scale(0.35,0.35) translate(4.8,4.8)" />
     
-    <use xlink:href="#polygon" transform="scale(0.27,0.27) translate(0.30,0.65)" />
-    <use xlink:href="#polygon" transform="scale(0.27,0.27) translate(4.2,1.90)" />
+    <use xlink:href="#dodecagon" transform="scale(0.27,0.27) translate(0.30,0.65)" />
+    <use xlink:href="#dodecagon" transform="scale(0.27,0.27) translate(4.2,1.90)" />
     <use xlink:href="#line" transform="scale(0.25,0.25) translate(0.3,0.95)" />
     <use xlink:href="#triangle" fill="purple"  transform="scale(0.26,0.26) translate(1.8,1.7)" /> 
 
-    <use xlink:href="#polygon" transform="scale(0.22,0.22) translate(11.8,0.75)" />
-    <use xlink:href="#polygon" transform="scale(0.22,0.22) translate(15.7,1.95)" />
+    <use xlink:href="#dodecagon" transform="scale(0.22,0.22) translate(11.8,0.75)" />
+    <use xlink:href="#dodecagon" transform="scale(0.22,0.22) translate(15.7,1.95)" />
     <use xlink:href="#line" transform="scale(0.2,0.2) translate(13,1.1)" />
     <use xlink:href="#triangle" fill="green" transform="scale(0.2,0.2) translate(14.8,2)" /> 
     
