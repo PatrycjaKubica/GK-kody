@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<head>
+<meta charset="UTF-8">
+<title>CS 424 Lab 9</title>
+<script src="https://cdn.jsdelivr.net/npm/three@0.115/build/three.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.115/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.115/examples/js/loaders/GLTFLoader.js"></script>
+<script>
+
+"use strict";
+
+var canvas, renderer, scene, camera; // Standard three.js requirements.
+
+var controls;  // An OrbitControls object that is used to implement
+               // rotation of the scene using the mouse.  (It actually rotates
+               // the camera around the scene.)
+
+var animating = false;  // Set to true when an animation is in progress.
+var frameNumber = 0;  // Frame number is advanced by 1 for each frame while animating.
+
+var floor; 
+var pole1, pole2, pole3, pole4, pole5, pole6, pole7, pole8, pole9, pole10, pole11, pole12 ;
+var pivot1, pivot2, pivot3, pivot4, pivot5, pivot6, pivot7, pivot8, pivot9, pivot10, pivot11, pivot12;
+//var pivot13, pivot14, pivot15, pivot16, pivot17, pivot18, pivot19, pivot20, pivot21, pivot22, pivot23, pivot24;
+var roof;
+var roof2;
+var k1,k2,k3,k4,k5,k6,k7,k8,k9,k10,k11,k12;
+/**
+ *  The render function draws the scene.
+ */
+function render() {
+    renderer.render(scene, camera);
+}
+
+
+/**
+ * This function is called by the init() method to create the world. 
+ */
+function createWorld() {
+    
+    renderer.setClearColor("white"); // Background color for scene.
+    scene = new THREE.Scene();
+    
+    // ------------------- Make a camera with viewpoint light ----------------------
+    
+    camera = new THREE.PerspectiveCamera(30, canvas.width/canvas.height, 0.1, 100);
+    camera.position.z = 40;
+	camera.position.y = 20;
+    var light;  // A light shining from the direction of the camera; moves with the camera.
+    light = new THREE.DirectionalLight();
+    light.position.set(0,0,1);
+    camera.add(light);
+    scene.add(camera);
+    
+    //------------------- Create the scene's visible objects ----------------------
+	floor =  new THREE.Mesh(
+             new THREE.CylinderGeometry(13.5,13.5,0.6,13,1),
+             new THREE.MeshPhongMaterial({
+               color: 0x441c84,
+               specular: 0x222222,
+               shininess: 8,
+               shading: THREE.FlatShading
+            })
+    );
+    floor.rotation.y = Math.PI/12;
+    scene.add(floor);
+
+    var TextureLoader = new THREE.TextureLoader();
+    var earthTexture = TextureLoader.load('./resources/earth.jpg');
+    var geometry = new THREE.SphereGeometry( 3.7, 32, 32 );
+    var material = new THREE.MeshBasicMaterial( { map: earthTexture });
+    var sphere = new THREE.Mesh(geometry, material);
+    sphere.position.y=3.8;
+    scene.add(sphere);
+
+
+// ----- słupy ----	
+
+	var pole1 = new THREE.Mesh(
+  new THREE.CylinderGeometry(0.15, 0.15, 7.5, 30, 1),
+  new THREE.MeshPhongMaterial({
+    color: 0x7c5426,
+    specular: 0x222222,
+    shininess: 8,
+    shading: THREE.FlatShading
+  })
+);
+pole1.position.set(12, 3.8, 0);
+scene.add(pole1);
+
+var pole2 = pole1.clone();
+pole2.position.set(0, 3.8, 12);
+pole2.rotation.y = Math.PI / 2;
+scene.add(pole2);
+
+var pole3 = pole1.clone();
+pole3.position.set(-12, 3.8, 0);
+pole3.rotation.y = Math.PI;
+scene.add(pole3);
+
+var pole4 = pole1.clone();
+pole4.position.set(0, 3.8, -12);
+pole4.rotation.y = -Math.PI / 2;
+scene.add(pole4);
+
+var pole5 = pole1.clone();
+pole5.position.set(8.5, 3.8, 8.5);
+pole5.rotation.y = Math.PI / 4;
+scene.add(pole5);
+
+var pole6 = pole1.clone();
+pole6.position.set(-8.5, 3.8, 8.5);
+pole6.rotation.y = -Math.PI / 4;
+scene.add(pole6);
+
+var pole7 = pole1.clone();
+pole7.position.set(-8.5, 3.8, -8.5);
+pole7.rotation.y = -3 * Math.PI / 4;
+scene.add(pole7);
+
+var pole8 = pole1.clone();
+pole8.position.set(8.5, 3.8, -8.5);
+pole8.rotation.y = 3 * Math.PI / 4;
+scene.add(pole8);
+
+var pole9 = pole1.clone();
+pole9.position.set(4.5, 3.8, 12);
+pole9.rotation.y = Math.PI / 2 + Math.PI / 4;
+scene.add(pole9);
+
+var pole10 = pole1.clone();
+pole10.position.set(-4.5, 3.8, 12);
+pole10.rotation.y = Math.PI / 2 - Math.PI / 4;
+scene.add(pole10);
+
+var pole11 = pole1.clone();
+pole11.position.set(-4.5, 3.8, -12);
+pole11.rotation.y = -Math.PI / 2 + Math.PI / 4;
+scene.add(pole11);
+
+var pole12 = pole1.clone();
+pole12.position.set(4.5, 3.8, -12);
+pole12.rotation.y = -Math.PI / 2 - Math.PI / 4;
+scene.add(pole12);
+
+// --- dach ---
+	roof =  new THREE.Mesh(
+            new THREE.CylinderGeometry(0.1,13,3,30,1),
+            new THREE.MeshPhongMaterial({
+               color: 0x441c84,
+               specular: 0x222222,
+               shininess: 8,
+               shading: THREE.FlatShading
+            })
+    );
+    roof.position.y=9.1;
+	scene.add(roof);
+		 
+	roof2 =  new THREE.Mesh(
+             new THREE.CylinderGeometry(13,13,0.3,200,1),
+             new THREE.MeshPhongMaterial({
+                color: 0x441c84,
+                specular: 0x222222,
+                shininess: 8,
+                shading: THREE.FlatShading
+             })
+    );
+    roof2.position.y=7.5;
+	  scene.add(roof2);
+	
+    var loader = new THREE.GLTFLoader();
+ 
+// --- konie ---
+var horse1 = loader.load( 'https://threejs.org/examples/models/gltf/Horse.glb', function ( gltf ) {
+    gltf.scene.scale.multiplyScalar( 0.015 );
+    gltf.scene.position.copy(pole1.position); // place horse in the middle of pole1
+    gltf.scene.position.y = 1;
+    horse1 = gltf.scene;
+    scene.add( horse1 );
+});
+
+var horse2 = loader.load( 'https://threejs.org/examples/models/gltf/Horse.glb', function ( gltf ) {
+    gltf.scene.scale.multiplyScalar( 0.015 );
+    gltf.scene.position.copy(pole2.position); // place horse in the middle of pole2
+    gltf.scene.position.y = 1;
+    gltf.scene.rotation.y = -Math.PI / 2; // adjust rotation to face forward
+    horse2 = gltf.scene;
+    scene.add( horse2 );
+});
+
+var horse3 = loader.load( 'https://threejs.org/examples/models/gltf/Horse.glb', function ( gltf ) {
+    gltf.scene.scale.multiplyScalar( 0.015 );
+    gltf.scene.position.copy(pole3.position); // place horse in the middle of pole3
+    gltf.scene.position.y = 1;
+    gltf.scene.rotation.y = Math.PI; // adjust rotation to face forward
+    horse3 = gltf.scene;
+    scene.add( horse3 );
+});
+
+var horse4 = loader.load( 'https://threejs.org/examples/models/gltf/Horse.glb', function ( gltf ) {
+    gltf.scene.scale.multiplyScalar( 0.015 );
+    gltf.scene.position.copy(pole4.position); // place horse in the middle of pole4
+    gltf.scene.position.y = 1;
+    gltf.scene.rotation.y = Math.PI / 2; // adjust rotation to face forward
+    horse4 = gltf.scene;
+    scene.add( horse4 );
+});
+
+var horse5 = loader.load( 'https://threejs.org/examples/models/gltf/Horse.glb', function ( gltf ) {
+    gltf.scene.scale.multiplyScalar( 0.015 );
+    gltf.scene.position.copy(pole5.position); // place horse in the middle of pole5
+    gltf.scene.position.y = 0.8;
+    gltf.scene.rotation.y = 5.8; // adjust rotation to face forward
+    horse5 = gltf.scene;
+    scene.add( horse5 );
+});
+
+var horse6 = loader.load( 'https://threejs.org/examples/models/gltf/Horse.glb', function ( gltf ) {
+    gltf.scene.scale.multiplyScalar( 0.015 );
+    gltf.scene.position.copy(pole6.position); // place horse in the middle of pole6
+    gltf.scene.position.y = 0.8;
+    gltf.scene.rotation.y = -Math.PI / 1.4; // adjust rotation to face forward
+    horse6 = gltf.scene;
+    scene.add( horse6 );
+});
+
+var horse7 = loader.load( 'https://threejs.org/examples/models/gltf/Horse.glb', function ( gltf ) {
+    gltf.scene.scale.multiplyScalar( 0.015 );
+    gltf.scene.position.copy(pole7.position); // place horse in the middle of pole7
+    gltf.scene.position.y = 1;
+    gltf.scene.rotation.y = Math.PI / 1.4; // adjust rotation to face forward
+    horse7 = gltf.scene;
+    scene.add( horse7 );
+});
+
+var horse8 = loader.load( 'https://threejs.org/examples/models/gltf/Horse.glb', function ( gltf ) {
+    gltf.scene.scale.multiplyScalar( 0.015 );
+    gltf.scene.position.copy(pole8.position);
+    gltf.scene.position.y = 1;
+    gltf.scene.rotation.y = 0.6;
+    horse8 = gltf.scene;
+    scene.add( horse8 );
+});
+
+var horse9 = loader.load( 'https://threejs.org/examples/models/gltf/Horse.glb', function ( gltf ) {
+    gltf.scene.scale.multiplyScalar( 0.015 );
+    gltf.scene.position.copy(pole9.position);
+    gltf.scene.position.y = 1;
+    gltf.scene.rotation.y = -1.2;
+    horse9 = gltf.scene;
+    scene.add( horse9 );
+});
+
+var horse10 = loader.load( 'https://threejs.org/examples/models/gltf/Horse.glb', function ( gltf ) {
+    gltf.scene.scale.multiplyScalar( 0.015 );
+    gltf.scene.position.copy(pole10.position);
+    gltf.scene.position.y = 1;
+    gltf.scene.rotation.y = -1.9;
+    horse10 = gltf.scene;
+    scene.add( horse10 );
+});
+
+var horse11 = loader.load( 'https://threejs.org/examples/models/gltf/Horse.glb', function ( gltf ) {
+    gltf.scene.scale.multiplyScalar( 0.015 );
+    gltf.scene.position.copy(pole11.position);
+    gltf.scene.position.y = 1;
+    gltf.scene.rotation.y = 2;
+    horse11 = gltf.scene;
+    scene.add( horse11 );
+});
+
+var horse12 = loader.load( 'https://threejs.org/examples/models/gltf/Horse.glb', function ( gltf ) {
+    gltf.scene.scale.multiplyScalar( 0.015 );
+    gltf.scene.position.copy(pole12.position);
+    gltf.scene.position.y = 1;
+    gltf.scene.rotation.y = 1.3;
+    horse12 = gltf.scene;
+    scene.add( horse12 );
+});
+
+
+	//--- Słupy ---
+	var box1 = new THREE.Box3().setFromObject(pole1);
+    var box2 = new THREE.Box3().setFromObject(pole2);
+    var box3 = new THREE.Box3().setFromObject(pole3);
+    var box4 = new THREE.Box3().setFromObject(pole4);
+    var box5 = new THREE.Box3().setFromObject(pole5);
+    var box6 = new THREE.Box3().setFromObject(pole6);
+    var box7 = new THREE.Box3().setFromObject(pole7);
+    var box8 = new THREE.Box3().setFromObject(pole8);
+    var box9 = new THREE.Box3().setFromObject(pole9);
+    var box10 = new THREE.Box3().setFromObject(pole10);
+    var box11 = new THREE.Box3().setFromObject(pole11);
+    var box12 = new THREE.Box3().setFromObject(pole12);
+
+    /*
+    var box13 = new THREE.Box3().setFromObject(horse1);
+    var box14 = new THREE.Box3().setFromObject(horse2);
+    var box15 = new THREE.Box3().setFromObject(horse3);
+    var box16 = new THREE.Box3().setFromObject(horse);
+    var box17 = new THREE.Box3().setFromObject(horse5);
+    var box18 = new THREE.Box3().setFromObject(horse6);
+    var box19 = new THREE.Box3().setFromObject(horse7);
+    var box20 = new THREE.Box3().setFromObject(horse8);
+    var box21 = new THREE.Box3().setFromObject(horse9);
+    var box22 = new THREE.Box3().setFromObject(horse10);
+    var box23 = new THREE.Box3().setFromObject(horse11);
+    var box24 = new THREE.Box3().setFromObject(horse12);
+    */
+   
+    box1.center( pole1.position );
+    box2.center( pole2.position );
+    box3.center( pole3.position );
+    box4.center( pole4.position );
+    box5.center( pole5.position );
+    box6.center( pole6.position );
+    box7.center( pole7.position );
+    box8.center( pole8.position );
+    box9.center( pole9.position );
+    box10.center( pole10.position );
+    box11.center( pole11.position );
+    box12.center( pole12.position );
+
+    /*
+    box13.center( horse1.position );
+    box14.center( horse2.position );
+    box15.center( horse3.position );
+    box16.center( horse4.position );
+    box17.center( horse5.position );
+    box18.center( horse6.position );
+    box19.center( horse7.position );
+    box20.center( horse8.position );
+    box21.center( horse9.position );
+    box22.center( horse10.position );
+    box23.center( horse11.position );
+    box24.center( horse12.position );
+    */
+
+	
+	pivot1 = new THREE.Group();
+    pivot2 = new THREE.Group();
+    pivot3 = new THREE.Group();
+    pivot4 = new THREE.Group();
+    pivot5 = new THREE.Group();
+    pivot6 = new THREE.Group();
+    pivot7 = new THREE.Group();
+    pivot8 = new THREE.Group();
+    pivot9 = new THREE.Group();
+    pivot10 = new THREE.Group();
+    pivot11 = new THREE.Group();
+    pivot12 = new THREE.Group();
+    /*
+    pivot13 = new THREE.Group();
+    pivot14 = new THREE.Group();
+    pivot15 = new THREE.Group();
+    pivot16 = new THREE.Group();
+    pivot17 = new THREE.Group();
+    pivot18 = new THREE.Group();
+    pivot19 = new THREE.Group();
+    pivot20 = new THREE.Group();
+    pivot21 = new THREE.Group();
+    pivot22 = new THREE.Group();
+    pivot23 = new THREE.Group();
+    pivot34 = new THREE.Group();
+    */
+ 
+    scene.add(pivot1);
+    scene.add(pivot2);
+    scene.add(pivot3);
+    scene.add(pivot4);
+    scene.add(pivot5);
+    scene.add(pivot6);
+    scene.add(pivot7);
+    scene.add(pivot8);
+    scene.add(pivot9);
+    scene.add(pivot10);
+    scene.add(pivot11);
+    scene.add(pivot12);
+    /*
+    scene.add(pivot13);
+    scene.add(pivot14);
+    scene.add(pivot15);
+    scene.add(pivot16);
+    scene.add(pivot17);
+    scene.add(pivot18);
+    scene.add(pivot19);
+    scene.add(pivot20);
+    scene.add(pivot21);
+    scene.add(pivot22);
+    scene.add(pivot23);
+    scene.add(pivot24);
+	*/	 
+ 
+    pivot1.add(pole1);
+    pivot2.add(pole2);
+    pivot3.add(pole3);
+    pivot4.add(pole4);
+    pivot5.add(pole5);
+    pivot6.add(pole6);
+    pivot7.add(pole7);
+    pivot8.add(pole8);
+    pivot9.add(pole9);
+    pivot10.add(pole10);
+    pivot11.add(pole11);
+    pivot12.add(pole12);
+    /*
+    pivot13.add(horse1);
+    pivot14.add(horse2);
+    pivot15.add(horse3);
+    pivot16.add(horse4);
+    pivot17.add(horse5);
+    pivot18.add(horse6);
+    pivot19.add(horse7);
+    pivot20.add(horse8);
+    pivot21.add(horse9);
+    pivot22.add(horse10);
+    pivot23.add(horse11);
+    pivot24.add(horse12);
+    */
+
+	
+
+} // end function createWorld()
+
+
+/**
+ *  This function is called once for each frame of the animation, before
+ *  the render() function is called for that frame.  It updates any
+ *  animated properties.  The value of the global variable frameNumber
+ *  is incrementd 1 before this function is called.
+ */
+function updateForFrame() {
+    
+    floor.rotation.y -= 0.01;
+	roof.rotation.y -= 0.01;
+	roof2.rotation.y -= 0.01;
+	
+	pivot1.rotation.y -= 0.01;
+    pivot2.rotation.y -= 0.01;
+    pivot3.rotation.y -= 0.01;
+    pivot4.rotation.y -= 0.01;
+    pivot5.rotation.y -= 0.01;
+    pivot6.rotation.y -= 0.01;
+    pivot7.rotation.y -= 0.01;
+    pivot8.rotation.y -= 0.01;
+    pivot9.rotation.y -= 0.01;
+    pivot10.rotation.y -= 0.01;
+    pivot11.rotation.y -= 0.01;
+    pivot12.rotation.y -= 0.01;
+
+
+    
+}
+
+
+/* ---------------------------- MOUSE AND ANIMATION SUPPORT ------------------
+/**
+ *  This page uses THREE.OrbitControls to let the user use the mouse to rotate
+ *  the view.  OrbitControls are designed to be used during an animation, where
+ *  the rotation is updated as part of preparing for the next frame.  The scene
+ *  is not automatically updated just because the user drags the mouse.  To get
+ *  the rotation to work without animation, I add another mouse listener to the
+ *  canvas, just to call the render() function when the user drags the mouse.
+ *  The same thing holds for touch events -- I call render for any mouse move
+ *  event with one touch.
+ */
+function installOrbitControls() {
+    controls = new THREE.OrbitControls(camera,canvas);
+    controls.noPan = true; 
+    controls.noZoom = true;
+    controls.staticMoving = true;
+    function move() {
+        controls.update();
+        if (! animating) {
+            render();
+        }
+    }
+    function down() {
+        document.addEventListener("mousemove", move, false);
+    }
+    function up() {
+        document.removeEventListener("mousemove", move, false);
+    }
+    function touch(event) {
+        if (event.touches.length == 1) {
+            move();
+        }
+    }
+    canvas.addEventListener("mousedown", down, false);
+    canvas.addEventListener("touchmove", touch, false);
+}
+
+/*  Called when user changes setting of the Animate checkbox. */
+function doAnimateCheckbox() {
+   var run = document.getElementById("animateCheckbox").checked;
+   if (run != animating) {
+       animating = run;
+       if (animating) {
+           requestAnimationFrame(doFrame);
+       }
+   }
+}
+
+/*  Drives the animation, called by system through requestAnimationFrame() */
+function doFrame() {
+    if (animating) {
+        frameNumber++;
+        updateForFrame();
+        render();
+        requestAnimationFrame(doFrame);
+    }
+}
+
+/*----------------------------- INITIALIZATION ----------------------------------------
+/**
+ *  This function is called by the onload event so it will run after the
+ *  page has loaded.  It creates the renderer, canvas, and scene objects,
+ *  calls createWorld() to add objects to the scene, and renders the
+ *  initial view of the scene.  If an error occurs, it is reported.
+ */
+function init() {
+    try {
+        canvas = document.getElementById("glcanvas");
+        renderer = new THREE.WebGLRenderer({
+            canvas: canvas,
+            antialias: true,
+            alpha: false
+        });
+    }
+    catch (e) {
+        document.getElementById("message").innerHTML="<b>Sorry, an error occurred:<br>" +
+                e + "</b>";
+        return;
+    }
+    document.getElementById("animateCheckbox").checked = false;
+    document.getElementById("animateCheckbox").onchange = doAnimateCheckbox;
+    createWorld();
+    installOrbitControls();
+    render();
+}
+
+</script>
+</head>
+<body onload="init()">
+
+<h2>Three.js Modeling Demo: Merry-Go-Round</h2>
+
+<noscript>
+   <p style="color: #AA0000; font-weight: bold">Sorry, but this page requires JavaScript!</p>
+</noscript>
+
+<p style="color:#AA0000; font-weight: bold" id="message">
+</p>
+
+<p>
+   <label><input type="checkbox" id="animateCheckbox"><b>Animate</b></label>
+   <b style="margin-left:50px">Use the mouse to rotate the model.</b>
+</p>
+
+<div id="canvas-holder" style="float:left; border: thin solid black; background-color: white">
+   <canvas width=1200 height=600 id="glcanvas"></canvas>
+</div>
+
+</body>
+</html>
